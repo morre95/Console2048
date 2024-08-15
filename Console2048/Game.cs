@@ -61,7 +61,8 @@ namespace Console2048
         public void AddRandomCell()
         {
             int x = rnd.Next(Length), y = rnd.Next(Width);
-            int value = rnd.NextDouble() < 0.9 ? 2 : 4;
+            Debug.WriteLine(rnd.NextDouble());
+            int value = rnd.NextDouble() < 0.98 ? 2 : 4;
 
             while (Cells[x, y].Value != null)
             {
@@ -112,6 +113,8 @@ namespace Console2048
                 case ConsoleKey.DownArrow:
                     MoveDown();
                     break;
+                default:
+                    return;
             }
             UpdateCells();
             AddRandomCell();
@@ -147,7 +150,7 @@ namespace Console2048
         {
             for (int x = Length - 1; x >= 0; x--)
             {
-                for (int y = 0; y < Width; y++)
+                for (int y = Width - 1; y >= 0; y--)
                 {
                     if (x > 0 && Cells[x, y].Value != null)
                     {
@@ -197,7 +200,7 @@ namespace Console2048
 
         private void MoveLeft()
         {
-            for (int x = 0; x < Length; x++)
+            for (int x = Length - 1; x >= 0; x--)
             {
                 for (int y = Width - 1; y >= 0; y--)
                 {

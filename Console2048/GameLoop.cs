@@ -18,37 +18,37 @@ namespace Console2048
 
             do
             {
-                if (Console.KeyAvailable)
+                game.MakeMove(Console.ReadKey(true));
+                game.DisplayStats(stopwatch);
+
+                bool gameOver = game.GameOver();
+                bool isWon = game.Is2048();
+
+                if (gameOver || isWon)
                 {
-                    game.MakeMove(Console.ReadKey(true));
-                    game.DisplayStats(stopwatch);
-                    Console.SetCursorPosition(0, 16);
-
-                    bool gameOver = game.GameOver();
-                    bool isWon = game.Is2048();
-
-                    if (gameOver || isWon)
+                    Console.SetCursorPosition(4, 3);
+                    if (gameOver)
                     {
-                        Console.SetCursorPosition(0, 16);
-                        if (gameOver)
-                        {
-                            ConsoleHelper.WriteLine("-------------", ConsoleColor.Yellow);
-                            ConsoleHelper.Write("|", ConsoleColor.Yellow);
-                            ConsoleHelper.Write(" You lost! ", ConsoleColor.Red);
-                            ConsoleHelper.WriteLine("|", ConsoleColor.Yellow);
-                            ConsoleHelper.WriteLine("-------------", ConsoleColor.Yellow);
-                        }
-                        else
-                        {
-                            ConsoleHelper.WriteLine("------------", ConsoleColor.DarkBlue);
-                            ConsoleHelper.Write("|", ConsoleColor.DarkBlue);
-                            ConsoleHelper.Write(" You Won! ", ConsoleColor.Green);
-                            ConsoleHelper.WriteLine("|", ConsoleColor.DarkBlue);
-                            ConsoleHelper.WriteLine("------------", ConsoleColor.DarkBlue);
-                        }
-                        Thread.Sleep(2500);
-                        break;
+                        ConsoleHelper.Write("=============", ConsoleColor.Yellow);
+                        Console.SetCursorPosition(4, 4);
+                        ConsoleHelper.Write("|", ConsoleColor.Yellow);
+                        ConsoleHelper.Write(" You lost! ", ConsoleColor.Red);
+                        ConsoleHelper.Write("|", ConsoleColor.Yellow);
+                        Console.SetCursorPosition(4, 5);
+                        ConsoleHelper.WriteLine("=============", ConsoleColor.Yellow);
                     }
+                    else
+                    {
+                        ConsoleHelper.Write("============", ConsoleColor.DarkBlue);
+                        Console.SetCursorPosition(4, 4);
+                        ConsoleHelper.Write("|", ConsoleColor.DarkBlue);
+                        ConsoleHelper.Write(" You Won! ", ConsoleColor.Green);
+                        ConsoleHelper.Write("|", ConsoleColor.DarkBlue);
+                        Console.SetCursorPosition(4, 5);
+                        ConsoleHelper.WriteLine("============", ConsoleColor.DarkBlue);
+                    }
+                    Thread.Sleep(2500);
+                    break;
                 }
             } while (true);
         }
