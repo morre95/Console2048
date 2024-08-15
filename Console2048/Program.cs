@@ -5,7 +5,7 @@ namespace Console2048
 {
     internal class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             IGame game = new Game();
 
