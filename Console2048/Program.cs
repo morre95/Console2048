@@ -155,22 +155,6 @@ namespace Console2048
         public bool GameOver()
         {
             return !Cells.Cast<Cell>().Any(cell => cell.Value == null);
-            /*Debug.WriteLine("------ NEW ------");
-            foreach (Cell cell in Cells.Cast<Cell>())
-            {
-                Debug.WriteLine($"x: {cell.X}, y: {cell.Y}, Value: {cell.Value}");
-            }
-            Cell[] result = new Cell[Cells.Length];
-
-            int write = 0;
-            for (int x = 0; x < Length; x++)
-            {
-                for (int y = 0; y < Width; y++)
-                {
-                    result[write++] = Cells[x, y];
-                }
-            }
-            return !result.Any(cell => cell.Value == null);*/
         }
 
         public bool Is2048()
