@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Console2048
 {
@@ -14,43 +15,82 @@ namespace Console2048
             game.AddRandomCell();
             game.AddRandomCell();
             game.PrintBoard();
-            game.DisplayStats(stopwatch);
 
+            bool gameOver = false;
+            bool isWon = false;
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+            Task.Run(() => {
+                while (!gameOver || !isWon) 
+                {
+                    game.DisplayStats(stopwatch);
+                    Thread.Sleep(10);
+                }
+            }, cts.Token);
             do
             {
                 game.MakeMove(Console.ReadKey(true));
-                game.DisplayStats(stopwatch);
 
-                bool gameOver = game.GameOver();
-                bool isWon = game.Is2048();
+                gameOver = game.GameOver();
+                isWon = game.Is2048();
 
                 if (gameOver || isWon)
                 {
+                    stopwatch.Start();
+
+                    cts.Cancel();
+                    cts.Dispose();
+
                     Console.SetCursorPosition(4, 3);
                     if (gameOver)
                     {
-                        ConsoleHelper.Write("=============", ConsoleColor.Yellow);
+                        ConsoleHelper.Write("================", ConsoleColor.Yellow);
                         Console.SetCursorPosition(4, 4);
                         ConsoleHelper.Write("|", ConsoleColor.Yellow);
-                        ConsoleHelper.Write(" You lost! ", ConsoleColor.Red);
+                        ConsoleHelper.Write(" You lost!    ", ConsoleColor.Red);
                         ConsoleHelper.Write("|", ConsoleColor.Yellow);
                         Console.SetCursorPosition(4, 5);
-                        ConsoleHelper.WriteLine("=============", ConsoleColor.Yellow);
+                        ConsoleHelper.Write("|", ConsoleColor.Yellow);
+                        ConsoleHelper.Write($" {stopwatch.Elapsed.ToStringMyFormat().PadRight(12)} ", ConsoleColor.Cyan);
+                        ConsoleHelper.Write("|", ConsoleColor.Yellow);
+                        Console.SetCursorPosition(4, 6);
+                        ConsoleHelper.WriteLine("================", ConsoleColor.Yellow);
                     }
                     else
                     {
-                        ConsoleHelper.Write("============", ConsoleColor.DarkBlue);
+                        ConsoleHelper.Write("================", ConsoleColor.DarkBlue);
                         Console.SetCursorPosition(4, 4);
                         ConsoleHelper.Write("|", ConsoleColor.DarkBlue);
-                        ConsoleHelper.Write(" You Won! ", ConsoleColor.Green);
+                        ConsoleHelper.Write(" You Won!     ", ConsoleColor.Green);
                         ConsoleHelper.Write("|", ConsoleColor.DarkBlue);
                         Console.SetCursorPosition(4, 5);
-                        ConsoleHelper.WriteLine("============", ConsoleColor.DarkBlue);
+                        ConsoleHelper.Write("|", ConsoleColor.DarkBlue);
+                        ConsoleHelper.Write($" {stopwatch.Elapsed.ToStringMyFormat().PadRight(12)} ", ConsoleColor.Yellow);
+                        ConsoleHelper.Write("|", ConsoleColor.DarkBlue);
+                        Console.SetCursorPosition(4, 6);
+                        ConsoleHelper.WriteLine("================", ConsoleColor.DarkBlue);
+
+
+                        Console.SetCursorPosition(4, 7);
+                        Console.Write(new string(' ', 30));
+                        Console.SetCursorPosition(4, 7);
+
+                        Console.Write("Your name: ");
+                        string username = Console.ReadLine();
+
+                        ScoreBoard board = new();
+                        Score score = new Score(game.GetScore(), stopwatch.Elapsed, username);
+                        board.Save(score);
                     }
+
                     Thread.Sleep(2500);
+
                     break;
                 }
             } while (true);
+
+            
+            
         }
     }
 }

@@ -12,5 +12,6 @@ namespace Console2048
         bool GameOver();
         bool Is2048();
         void ResetScore();
+        int GetScore();
     }
 }

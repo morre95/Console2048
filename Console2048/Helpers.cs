@@ -1,6 +1,6 @@
 ﻿namespace Console2048
 {
-    public class Helpers
+    public static class Helpers
     {
         public static ConsoleColor GetCellColor(int? value)
         {
@@ -29,6 +29,13 @@
                 default:
                     return ConsoleColor.Red;
             }
+        }
+
+        public static string ToStringMyFormat(this TimeSpan timeSpan)
+        {
+            string mil = timeSpan.Milliseconds.ToString("00");
+            if (mil.Length == 2 ) mil = mil + "0";
+            return timeSpan.Hours.ToString("00") + ":" + timeSpan.Minutes.ToString("00") + ":" + timeSpan.Seconds.ToString("00") + "." + mil;
         }
     }
 }

@@ -62,7 +62,7 @@ namespace Console2048
         {
             int x = rnd.Next(Length), y = rnd.Next(Width);
             Debug.WriteLine(rnd.NextDouble());
-            int value = rnd.NextDouble() < 0.98 ? 2 : 4;
+            int value = rnd.NextDouble() < 0.9 ? 2 : 4;
 
             while (Cells[x, y].Value != null)
             {
@@ -75,13 +75,13 @@ namespace Console2048
 
         public void DisplayStats(Stopwatch stopwatch)
         {
-            int x = 11, y = 0, padding = 26;
+            int x = 11, y = 0, padding = 21;
             
             string msg = 
-                $@"/--------------------------\" +
+                $@"/{new string('-', padding)}\" +
                 $"\n|{$"Total score:{TotalScore}".PadRight(padding)}|\n" +
-                $"|{$"Timer: {stopwatch.Elapsed}".PadRight(padding)}|\n" +
-                $@"/--------------------------\";
+                $"|{$"Timer: {stopwatch.Elapsed.ToStringMyFormat()}".PadRight(padding)}|\n" +
+                $@"/{new string('-', padding)}\";
 
             ConsoleHelper.WriteLine(msg, x, y);
 
@@ -89,6 +89,7 @@ namespace Console2048
 
         public bool GameOver()
         {
+            // TODO: Det bör köras en kontroll om det finns drag som kan göras för att fria upp utrymme
             return !Cells.Cast<Cell>().Any(cell => cell.Value == null);
         }
 
@@ -116,8 +117,8 @@ namespace Console2048
                 default:
                     return;
             }
-            UpdateCells();
             AddRandomCell();
+            UpdateCells();
         }
 
         private void MoveDown()
@@ -230,7 +231,15 @@ namespace Console2048
             {
                 for (int y = 0; y < Width; y++)
                 {
-                    Cells[x, y].Print(Cells[x, y].Value);
+                    int? value = Cells[x, y].Value;
+                    if (value == null)
+                    {
+                        Cells[x, y].Erase();
+                    } 
+                    else
+                    {
+                        Cells[x, y].Print(value);
+                    }
                 }
             }
         }
@@ -238,6 +247,11 @@ namespace Console2048
         public void ResetScore()
         {
             TotalScore = 0;
+        }
+
+        public int GetScore()
+        {
+            return TotalScore;
         }
     }
 }
