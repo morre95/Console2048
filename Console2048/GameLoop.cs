@@ -21,7 +21,7 @@ namespace Console2048
 
             CancellationTokenSource cts = new CancellationTokenSource();
             Task.Run(() => {
-                while (!gameOver || !isWon) 
+                while (!cts.IsCancellationRequested) 
                 {
                     game.DisplayStats(stopwatch);
                     Thread.Sleep(10);
@@ -39,7 +39,6 @@ namespace Console2048
                     stopwatch.Start();
 
                     cts.Cancel();
-                    cts.Dispose();
 
                     Console.SetCursorPosition(4, 3);
                     if (gameOver)
@@ -83,8 +82,11 @@ namespace Console2048
                         board.Save(score);
                     }
 
-                    Thread.Sleep(2500);
+                    Thread.Sleep(1000);
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadKey(true);
 
+                    Console.Clear();
                     break;
                 }
             } while (true);
