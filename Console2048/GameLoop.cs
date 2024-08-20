@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Console2048
 {
@@ -54,6 +55,29 @@ namespace Console2048
                         ConsoleHelper.Write("|", ConsoleColor.Yellow);
                         Console.SetCursorPosition(4, 6);
                         ConsoleHelper.WriteLine("================", ConsoleColor.Yellow);
+
+
+                        Console.SetCursorPosition(4, 7);
+                        Console.Write(new string(' ', 30));
+                        Console.SetCursorPosition(4, 8);
+
+                        ScoreBoard board = new();
+
+                        IEnumerable<Score> scores = board.Load().OrderByDescending(x => x.TotalScore).Take(10);
+                        bool anyScores = scores.Any();
+                        int minTotal = anyScores ? scores.Min(s => s.TotalScore) : 0;
+
+                        if (anyScores || game.GetScore() >= minTotal)
+                        {
+                            ConsoleHelper.WriteLine("New highscore", ConsoleColor.Green);
+                            Console.Write("Your name: ");
+
+                            Console.CursorVisible = true;
+                            string username = Console.ReadLine();
+                            Console.CursorVisible = false;
+
+                            board.Save(new Score(game.GetScore(), stopwatch.Elapsed, username));
+                        }
                     }
                     else
                     {
@@ -72,10 +96,14 @@ namespace Console2048
 
                         Console.SetCursorPosition(4, 7);
                         Console.Write(new string(' ', 30));
-                        Console.SetCursorPosition(4, 7);
+                        Console.SetCursorPosition(4, 8);
 
+                        ConsoleHelper.WriteLine("New highscore", ConsoleColor.Green);
                         Console.Write("Your name: ");
+
+                        Console.CursorVisible = true;
                         string username = Console.ReadLine();
+                        Console.CursorVisible = false;
 
                         ScoreBoard board = new();
                         Score score = new Score(game.GetScore(), stopwatch.Elapsed, username);

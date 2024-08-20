@@ -45,13 +45,19 @@ namespace Console2048
 
         public static void PrintScore(this List<Score> board)
         {
-            if (board == null || board.Count == 0) return;
+            if (board == null || board.Count == 0) 
+            {
+                ConsoleHelper.WriteLine("There is no scores to display.", ConsoleColor.Yellow);
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey(true);
+                return; 
+            }
 
             int padding = 30;
             ConsoleHelper.WriteLine(new string('=', padding), ConsoleColor.Yellow);
 
-
-            foreach (Score score in board.OrderByDescending(x => x.TotalScore).Take(10))
+            int index = 0;
+            foreach (Score score in board.OrderByDescending(x => x.TotalScore).Take(7))
             {
                 
                 int totalScore    = score.TotalScore;
@@ -60,7 +66,7 @@ namespace Console2048
                 string userName   = score.Name;
                 
                 ConsoleHelper.Write("|", ConsoleColor.Yellow);
-                ConsoleHelper.Write($"--{userName.PadRight(padding - 4, '-')}", ConsoleColor.Green);
+                ConsoleHelper.Write($"--#{++index} {userName.PadRight(padding - 7, '-')}", ConsoleColor.Green);
                 ConsoleHelper.WriteLine("|", ConsoleColor.Yellow);
                 ConsoleHelper.Write("|", ConsoleColor.Yellow);
                 ConsoleHelper.Write(" Score: ", ConsoleColor.Green);
@@ -70,7 +76,11 @@ namespace Console2048
                 ConsoleHelper.Write(" Time: ", ConsoleColor.Cyan);
                 ConsoleHelper.Write($" {timeSpan.ToStringMyFormat().PadRight(padding - 11)} ", ConsoleColor.Cyan);
                 ConsoleHelper.WriteLine("|", ConsoleColor.Yellow);
-                
+                ConsoleHelper.Write("|", ConsoleColor.Yellow);
+                ConsoleHelper.Write(" Date: ", ConsoleColor.Cyan);
+                ConsoleHelper.Write($" {date.ToString("yyyy-MM-dd HH:mm").PadRight(padding - 11)} ", ConsoleColor.Cyan);
+                ConsoleHelper.WriteLine("|", ConsoleColor.Yellow);
+
             }
             ConsoleHelper.WriteLine(new string('=', padding), ConsoleColor.Yellow);
             Console.ReadLine();
