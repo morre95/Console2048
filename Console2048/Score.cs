@@ -6,6 +6,7 @@
         public int TotalScore {  get; set; }
         public DateTime Date { get; set; }
         public TimeSpan Time { get; set; }
+        public bool TargetReached { get; set; } = false;
 
         public Score() { }
 

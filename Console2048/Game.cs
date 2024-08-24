@@ -95,34 +95,53 @@ namespace Console2048
 
         public bool Is2048()
         {
-            return TotalScore >= 2048;
+            //return Cells.Cast<Cell>().Any(cell => cell.Value == 2048);
+            for (int x = 0; x < Length; x++)
+            {
+                for (int y = 0; y < Width; y++)
+                {
+                    if (Cells[x, y].Value == 2048)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+
         }
 
         public void MakeMove(ConsoleKeyInfo cki)
         {
+            bool hasMoved = false;
             switch (cki.Key)
             {
                 case ConsoleKey.LeftArrow:
-                    MoveLeft();
+                    hasMoved = MoveLeft();
                     break;
                 case ConsoleKey.RightArrow:
-                    MoveRight();
+                    hasMoved = MoveRight();
                     break;
                 case ConsoleKey.UpArrow:
-                    MoveUp();
+                    hasMoved = MoveUp();
                     break;
                 case ConsoleKey.DownArrow:
-                    MoveDown();
+                    hasMoved = MoveDown();
                     break;
                 default:
                     return;
             }
-            AddRandomCell();
+
+            if (hasMoved)
+            {
+                AddRandomCell();
+            }
+
             UpdateCells();
         }
 
-        private void MoveDown()
+        private bool MoveDown()
         {
+            bool hasMoved = false;
             for (int x = 0; x < Length; x++)
             {
                 for (int y = 0; y < Width; y++)
@@ -135,20 +154,25 @@ namespace Console2048
                             TotalScore += int.Parse((Cells[x, y].Value + Cells[x + 1, y].Value).ToString()!);
                             Cells[x, y].Value = null;
                             Cells[x, y].Erase();
+                            hasMoved = true;
                         }
                         else if (Cells[x + 1, y].Value == null)
                         {
                             Cells[x + 1, y].Value = Cells[x, y].Value;
                             Cells[x, y].Value = null;
                             Cells[x, y].Erase();
+                            hasMoved = true;
                         } 
                     }
                 }
             }
+
+            return hasMoved;
         }
 
-        private void MoveUp()
+        private bool MoveUp()
         {
+            bool hasMoved = false;
             for (int x = Length - 1; x >= 0; x--)
             {
                 for (int y = Width - 1; y >= 0; y--)
@@ -161,20 +185,24 @@ namespace Console2048
                             TotalScore += int.Parse((Cells[x, y].Value + Cells[x - 1, y].Value).ToString()!);
                             Cells[x, y].Value = null;
                             Cells[x, y].Erase();
+                            hasMoved = true;
                         }
                         else if (Cells[x - 1, y].Value == null)
                         {
                             Cells[x - 1, y].Value = Cells[x, y].Value;
                             Cells[x, y].Value = null;
                             Cells[x, y].Erase();
+                            hasMoved = true;
                         } 
                     }
                 }
             }
+            return hasMoved;
         }
 
-        private void MoveRight()
+        private bool MoveRight()
         {
+            bool hasMoved = false;
             for (int x = 0; x < Length; x++)
             {
                 for (int y = 0; y < Width; y++)
@@ -187,20 +215,24 @@ namespace Console2048
                             TotalScore += int.Parse((Cells[x, y].Value + Cells[x, y + 1].Value).ToString()!);
                             Cells[x, y].Value = null;
                             Cells[x, y].Erase();
+                            hasMoved = true;
                         }
                         else if (Cells[x, y + 1].Value == null)
                         {
                             Cells[x, y + 1].Value = Cells[x, y].Value;
                             Cells[x, y].Value = null;
                             Cells[x, y].Erase();
+                            hasMoved = true;
                         } 
                     }
                 }
             }
+            return hasMoved;
         }
 
-        private void MoveLeft()
+        private bool MoveLeft()
         {
+            bool hasMoved = false;
             for (int x = Length - 1; x >= 0; x--)
             {
                 for (int y = Width - 1; y >= 0; y--)
@@ -213,16 +245,19 @@ namespace Console2048
                             TotalScore += int.Parse((Cells[x, y].Value + Cells[x, y - 1].Value).ToString()!);
                             Cells[x, y].Value = null;
                             Cells[x, y].Erase();
+                            hasMoved = true;
                         }
                         else if (Cells[x, y - 1].Value == null)
                         {
                             Cells[x, y - 1].Value = Cells[x, y].Value;
                             Cells[x, y].Value = null;
                             Cells[x, y].Erase();
+                            hasMoved = true;
                         } 
                     }
                 }
             }
+            return hasMoved;
         }
 
         private void UpdateCells()

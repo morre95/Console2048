@@ -32,6 +32,7 @@ namespace Console2048
             {
                 game.MakeMove(Console.ReadKey(true));
 
+
                 gameOver = game.GameOver();
                 isWon = game.Is2048();
 
@@ -107,6 +108,9 @@ namespace Console2048
 
                         ScoreBoard board = new();
                         Score score = new Score(game.GetScore(), stopwatch.Elapsed, username);
+
+                        if (isWon) score.TargetReached = true;
+
                         board.Save(score);
                     }
 
